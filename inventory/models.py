@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from unicodedata import category
 from django.db import models
 from accounts.models import User
@@ -13,6 +14,9 @@ class WeaponCategory(models.Model):
     def no_of_weapons_in_category(self):
         return self.weapon_set.count()
 
+    class Meta:
+        verbose_name_plural = 'Weapon Categories'
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name+'-'+str(self.id))
@@ -23,21 +27,7 @@ class WeaponCategory(models.Model):
     def __str__(self):
         return self.name
 
-class WeaponSubCategory(models.Model):
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(blank=True, unique=True)
-    description = models.TextField(max_length=500, blank=True, null=True)
 
-    def no_of_weapons_in_category(self):
-        return self.weapon_set.count()
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name+'-'+str(self.id))
-        return super(WeaponSubCategory, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
 
 class WeaponBrandSupplier(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -89,7 +79,20 @@ class Weapon(models.Model):
 class WeaponAssigned(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     weapon = models.ForeignKey(Weapon, on_delete=models.CASCADE)
-    weapon_id = models.CharField(max_length=50, blank=True, unique=True)
+    weapon_name = models.CharField(max_length=50, blank=True, null=True)
+    weapon_unque_id = models.CharField(max_length=50, blank=True, unique=True)
     assigned_time = models.DateTimeField(auto_now_add=True)
     assigned_by = models.ForeignKey(User, related_name='assigned_by', on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(User, related_name='assigned_to', on_delete=models.CASCADE) 
+    slug = models.SlugField(blank=True, null=True)
+    was_returned = models.BooleanField(default=False, blank=True, null=True)
+    date_returned = models.DateTimeField(blank=True, null=True)
+    was_destroyed = models.BooleanField(default=False, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'weapons assigned'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.user.username+'-'+str(self.id))
+        return super(WeaponAssigned, self).save(*args, **kwargs)

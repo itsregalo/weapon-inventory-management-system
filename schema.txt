@@ -1,4 +1,92 @@
 ## Weapons Inventory Management System
 
-- Weapons
-- 
+User
+    name
+    first_name
+    last_name
+    email
+    password
+    
+    methods
+        -delete_user
+        -update_user
+        -create_user
+        -get_user
+
+Soldier
+    user (inherits from User)
+    rank
+    phone_number
+    address
+    date_of_birth
+    date_of_joining
+    date_of_leaving
+    profile_picture
+    slug
+
+    methods
+        -save
+        -delete_soldier
+        - __str__
+        -get_soldier
+        - request_weapon
+
+Weapon category
+    name
+    slug
+    description
+    
+    methods
+        -save
+        -delete_weapon_category
+        - __str__
+        -get_weapon_category
+        - get_no_of_weapons_in_category
+        -__str__
+
+WeaponBrandSupplier
+    user
+    name
+    category
+    slug
+    description
+
+    methods
+        -save
+        -delete_weapon_brand_supplier
+        -get_weapon_brand_supplier
+        - get_no_of_weapons_in_brand_supplier
+        -__str__
+
+Weapon
+    name
+    weapon_unique_id
+    slug
+    category
+    description
+    price
+    image
+    quantity_available
+    in_inventory
+
+    method
+        -save
+        -get_count
+        -__str__
+
+WeaponAssigned
+    weapon
+    weapon_name
+    weapon_unique_id
+    assigned_time
+    assigned_by
+    assigned_to
+    slug
+    was_returned
+    date_returned
+    was_destroyed
+
+    method
+        -save
+        -get_count
+        -__str__
